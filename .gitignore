@@ -2,3 +2,4 @@ venv/
 pycache/
 *.pyc
 archive_sandbox
+main_fallback.py

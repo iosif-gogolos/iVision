@@ -29,13 +29,20 @@ class GlassesOverlay:
             x, y = c
             return [x - lw//2, y - lh//2, x + lw//2, y + lh//2]
 
-        # Draw components
+        # Draw components - CHANGED ORDER: tint is now drawn AFTER frame
         self._draw_shadow(draw, lens_bbox, lx_c, rx_c)
-        self._draw_rims(draw, lens_bbox, lx_c, rx_c, lw)
         self._draw_bridge(draw, lx_c, rx_c, lw, lh, cy, bridge_min)
         knob_bbox = self._draw_arms(draw, w, h, lx_c, rx_c, lw, lh, cy)
+        
+        # Draw frame behind lenses
         self._draw_frame(draw, lx_c, rx_c, lw, lh, cy)
+        
+        # Draw tinted lenses on top
         self._draw_tint(draw, lens_bbox, lx_c, rx_c, lw)
+        
+        # Draw rims last so they're on top
+        self._draw_rims(draw, lens_bbox, lx_c, rx_c, lw)
+        
         self._draw_bottom_bar(draw, w, h, lower_bar_h_ratio)
 
         return overlay, knob_bbox
@@ -50,7 +57,7 @@ class GlassesOverlay:
 
     def _draw_rims(self, draw, lens_bbox, lx_c, rx_c, rim_w=10):
         """Draw lens rims."""
-        rim_color = COLORS['rim']
+        rim_color = (250,250,250,255)  # Use white rims
         for center in [lx_c, rx_c]:
             draw.ellipse(lens_bbox(center), outline=rim_color, width=rim_w)
 
@@ -100,17 +107,15 @@ class GlassesOverlay:
                     rx_c[0] + lw//2 + frame_margin,
                     cy + lh//2 + frame_margin]
         draw.rounded_rectangle(frame_box, radius=40,
-                              outline=(220,220,220,255), width=8, fill=(40,40,40,120))
+                              outline=(220,220,220,255), width=8, fill=(40,40,40,80))  # Reduced opacity
 
     def _draw_tint(self, draw, lens_bbox, lx_c, rx_c, rim_w=10):
         """Draw lens tint and final rims."""
         glass_tint = COLORS['glass_tint']
-        rim_color = (250,250,250,255)
         
         for center in [lx_c, rx_c]:
             bbox = lens_bbox(center)
             draw.ellipse(bbox, fill=glass_tint)
-            draw.ellipse(bbox, outline=rim_color, width=rim_w)
 
     def _draw_bottom_bar(self, draw, w, h, lower_bar_h_ratio):
         """Draw bottom control bar."""

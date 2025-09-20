@@ -19,7 +19,7 @@ DEFAULT_BRIDGE_MIN = 18
 # Colors
 COLORS = {
     'rim': (18, 18, 18, 255),
-    'glass_tint': (0, 150, 255, 30),
+    'glass_tint': (0, 150, 255, 60),
     'hud_text': "lime",
     'background': "#111111",
     'panel_bg': "#0e2410",
